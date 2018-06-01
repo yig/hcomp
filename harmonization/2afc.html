@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>
+    Evaluate the images.
+    </title>
+    
+    <script src="js/purl-2.3.1.js" type="text/javascript"></script>
+    <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
+    <script src="js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="js/AleaMash.js" type="text/javascript"></script>
+    
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css"> -->
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+
+<style type="text/css">
+div.stimulus
+{
+    /* border: 1px solid #cccccc; */
+    padding: 5px;
+    text-align: center;
+    
+    float: left;
+    
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    
+    /* Determined by the Likert scale */
+    min-width: 350px;
+}
+
+.stimulus img
+{
+    max-width: 600px;
+    max-height: 600px;
+}
+
+#instructions,#introduction
+{
+    margin: 15px;
+}
+#experiment
+{
+    margin: 15px;
+    
+    /* Initially hidden */
+    display: none;
+}
+
+div.nextprev
+{
+    clear: both;
+    text-align: center;
+    margin: 10px;
+    padding: 20px;
+}
+
+.hidden
+{
+    display: none;
+}
+
+
+/* Likert elements */
+div.likert
+{
+    font-size: 20px;
+    margin-top: 10px
+    height: 100px;
+}
+ul.likert
+{
+    font-size: 12px;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    
+    clear: both;
+    display: inline-block;
+}
+
+li.likert
+{
+    float: left;
+    text-align: center;
+    list-style-type: none;
+    width: 55px;
+    margin: 5px 5px 10px 5px;
+    font-size: 12px;
+}
+
+
+/* IRB-related elements */
+div.irb
+{
+    font-size: 10px;
+    font-family: myriad, verdana, sans-serif;
+    background: #ffe;
+    width: 500px;
+    
+    display: none;
+}
+div.irb a
+{
+    color: #000;
+}
+div.irb p
+{
+    padding-top: 3px;
+    margin-top: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+div.irb div.address
+{
+    display: none;
+    
+    margin-top: 0;
+    padding-top: 0;
+    
+    padding-left: 15px;
+}
+div.irb .showhide
+{
+    color: #00a;
+}
+
+div.nonirb
+{
+    position: relative;
+}
+
+/* Show the navbar even when printing:
+https://stackoverflow.com/questions/21875724/print-issue-with-bootstrap-fixed-navbar
+*/
+@media print { 
+    .navbar {
+        display: block;
+        border-width:0 !important;
+    }
+    .navbar-toggle {
+        display:none;
+    }
+}
+</style>
+
+</head>
+<body>
+
+<div class="irb">
+<p>Direct Manipulation of Numerical Optimization for Structured Geometry Creation
+
+<p>INFORMED CONSENT FORM
+
+<p>RESEARCH PROCEDURES:
+This research is being conducted to investigate algorithms related to color harmony. If you agree to participate, you will be asked to evaluate the color harmony in images. The experiment should last approximately 10 minutes.
+
+<p>RISKS:
+There are no foreseeable risks for participating in this research.
+
+<p>BENEFITS:
+There are no benefits to you as a participant other than to further research in algorithms for creating color harmony.
+
+<p>CONFIDENTIALITY:
+The data in this study will be confidential. Names and other identifiers will not be placed on surveys or other research data.
+
+<p>PARTICIPATION:
+Your participation is voluntary, and you may withdraw from the study at any time and for any reason. If you decide not to participate or if you withdraw from the study, there is no penalty or loss of benefits to which you are otherwise entitled. There are no costs to you or any other party.
+
+<p>CONTACT:
+This research is being conducted by Yotam Gingold of the Department of Computer Science at George Mason University. He may be reached at 703-993-9196 or <a href="mailto:ygingold@gmu.edu">ygingold@gmu.edu</a> for questions or to report a research-related problem. You may contact the George Mason University Institutional Review Board office at 703-993-4121 if you have questions or comments regarding your rights as a participant in the research.
+
+This research has been reviewed according to George Mason University procedures governing your participation in this research.
+
+<p>CONSENT:
+I have read this form, all of my questions have been answered by the research staff, and I agree to participate in this study.
+</div>
+
+<div class="nonirb">
+
+<form id="mturk_form" method="post" action="request.php">
+<input type="hidden" id="assignmentId" name="assignmentId" value="" />
+<input type="hidden" id="UserAgent" name="UserAgent" value="" />
+<input type="hidden" id="payload" name="payload" value="" />
+<input type="hidden" id="stimulus" name="stimulus" value="" />
+
+<div id="instructions">
+
+<h1>Evaluate the images.</h1>
+
+<p class="lead">
+A set of images will be displayed.
+</p>
+
+<!-- <p class="text-primary">Please wear your prescription glasses or contact lenses, if you would normally wear them to work with a computer or to watch a movie.</p> -->
+
+<p>
+The purpose of this experiment, which will take about 10 minutes to complete, is to measure the harmony between colors in an image.
+Harmonic colors are often perceived as balanced or pleasing to the eye.
+During the experiment, you will see a set of images.
+You will be asked to evaluate how harmonious each image appears to you.
+</p>
+
+<hr />
+
+</div>
+<div id="introduction">
+
+<p>Do you have any knowledge in color theory?
+<select id="experience" name="experience" required>
+    <option selected disabled hidden style='display: none' value=''></option>
+    <option value="no">No</option>
+    <option value="yes">Yes</option>
+</select>
+
+<p>Please do not continue if you have any form of color blindness.
+
+<p>
+<button type="button" id="begin" class="btn btn-default btn-lg" disabled>You must have Javascript enabled to complete this HIT.</button>
+
+</div>
+
+<div id="experiment">
+<!-- <h1>How harmonic are the colors in these images?</h1> -->
+
+<div id="all_images"></div>
+
+<div class="nextprev"><input type="submit" disabled name="Submit" value="Submit (please answer all questions)" id="submitButton" class="btn btn-default btn-lg" /></div>
+</div>
+
+</form>
+
+<script type='text/javascript'>
+    ///
+    /// Constants.
+    ///
+    var kDebugging = false;
+    var kOneAtATime = true;
+    var kMakePreviousButton = false;
+    
+    ///
+    /// Global variables.
+    ///
+    var assignmentId;
+    
+    ///
+    /// Global functions.
+    ///
+    // Shuffle a list in-place.
+    // From: http://dtm.livejournal.com/38725.html
+    // With better randomness:
+    // var random = Math.random;
+    var random = Alea();
+    function shuffle( list ) {
+      var i, j, t;
+      for (i = 1; i < list.length; i++) {
+        j = Math.floor(random()*(1+i));  // choose j in [0..i]
+        if (j != i) {
+          t = list[i];                        // swap list[i] and list[j]
+          list[i] = list[j];
+          list[j] = t;
+        }
+      }
+    }
+    
+    // Zero pad an integer.
+    // From: http://stackoverflow.com/questions/2998784/how-to-output-integers-with-leading-zeros-in-javascript
+    /*
+        zeroPad(5, 2); // "05"
+        zeroPad(5, 4); // "0005"
+        zeroPad(5, 6); // "000005"
+        zeroPad(1234, 2); // "1234" :)
+    */
+    function zeroPad(num, places) {
+        var zero = places - num.toString().length + 1;
+        return Array(+(zero > 0 && zero)).join("0") + num;
+    }
+    
+    function setup_form_for_payload( p )
+    {
+        "use strict";
+        
+        /// Parse the payload.
+        // The first character is the array separator.
+        var kArraySepChar = p[0];
+        // Split the array.
+        var image_names = p.substr( 1 ).split( kArraySepChar );
+        // Remove the first element; it is the number of alternatives N in the
+        // forced-choice. Every N elements in the array are grouped together.
+        var kGroupSize = parseInt( image_names.shift() );
+        // Remove the second element. It must be a 1 or a 0. If it is a 1,
+        // then we will ask each question twice (the consistency check).
+        var kShowTwice = parseInt( image_names.shift() );
+        // Remove the third element; it is the question to ask each participant.
+        var kQuestion = image_names.shift();
+        // Remove the fourth element; it is the base directory for the images/videos.
+        var kImagesDir = image_names.shift();
+        
+        var kPreviewMode = ( assignmentId === "ASSIGNMENT_ID_NOT_AVAILABLE" );
+        
+        // Image names show up in groups. Make every group_size elements an array entry.
+        // It makes no sense for group size to be 1.
+        if( kGroupSize <= 1 ) {
+            console.log( "Group size must be greater than 1:", kGroupSize );
+            die( 'There was an error loading this HIT. We apologize for the inconvenience.' );
+            return;
+        }
+        if( ( image_names.length % kGroupSize ) !== 0 ) {
+            console.log( "Array length is not a multiple of group size:", image_names.length, kGroupSize );
+            die( 'There was an error loading this HIT. We apologize for the inconvenience.' );
+            return;
+        }
+        
+        var groups = [];
+        for( var i = 0; i < image_names.length; i += kGroupSize ) {
+            var group = [];
+            for( var g = 0; g < kGroupSize; g+=1 ) {
+                group.push( image_names[ i + g ] );
+            }
+            shuffle( group );
+            groups.push( group );
+        }
+        
+        // Randomize the order in which we show the groups.
+        shuffle( groups );
+        
+        // If we are showing each example twice, then put each element in the array twice.
+        if( kShowTwice !== 0 && kShowTwice !== 1 ) {
+            console.log( "Show twice (consistency) is not a 0 or 1:", kShowTwice );
+            die( 'There was an error loading this HIT. We apologize for the inconvenience.' );
+            return;
+        }
+        
+        if( kShowTwice === 1 ) {
+            // Make an array of all the indices.
+            var all_indices = [];
+            for( var i = 0; i < groups.length; ++i ) {
+                all_indices.push( i );
+            }
+            
+            // Shuffle it while the last index is first (rejection sampling).
+            // This ensures that no one performs a back-to-back repeated task.
+            // (Only do this if there is more than one group.)
+            do {
+                shuffle( all_indices );
+            } while( groups.length > 1 && all_indices[0] === groups.length-1 );
+            
+            // Now replace each entry in all_indices with that group
+            // (whose images themselves are re-shuffled).
+            for( var i = 0; i < groups.length; ++i ) {
+                // Make a copy, because we will shuffle it.
+                // This ensures that the group will be shown in forward and reverse
+                // order, hopefully negating ordering effects.
+                all_indices[i] = groups[ all_indices[i] ].slice();
+                // Instead of shuffling it, reverse it.
+                // (This is better than randomizing, which for the common case
+                // of a group of size 2 may keep it in the same order.)
+                // shuffle( all_indices[i] );
+                all_indices[i].reverse();
+            }
+            
+            // Finally, concatenate the list.
+            // NOTE: .concat() doesn't modify groups, it returns a new one.
+            groups = groups.concat( all_indices );
+        }
+        
+        // Create a question for each group.
+        var all_images = $("#all_images");
+        
+        for( var i = 0; i < groups.length; ++i )
+        {
+            var group = groups[i];
+            
+            // Make div for the image.
+            all_images.append( '<div class="stimulus img-thumbnail" id="group' + i + '"></div>' );
+            var image_div = all_images.find( '#group' + i );
+            
+            var div = imageify( image_div, kImagesDir, group, i, groups.length, kQuestion );
+            
+            if( kPreviewMode ) continue;
+            
+            // div.find( '.likert input' ).click( function() { $(this).parents('.stimulus').find( '.nextprev' ).show(); } );
+        }
+        
+        // Hide all but the first one.
+        // NOTE: For debugging, it can be useful to comment out the hide()
+        //       so that you can see the entire survey at once.
+        if( kOneAtATime ) {
+            $( "#mturk_form div.stimulus" ).hide();
+            $( "#mturk_form div.stimulus" ).first().show();
+        }
+        
+        // If we're not previewing the HIT, enable the tag fields.
+        // If we're not previewing the HIT, hide the IRB assent.
+        if( kPreviewMode )
+        {
+            $('div.irb').show();
+            
+            var kAcceptMessage = "You must ACCEPT the HIT before you can submit the results.";
+            
+            // If we're previewing, disable the button and give it a helpful message
+            var beginButton = $('#begin');
+            beginButton.prop( "disabled", true );
+            beginButton.text( kAcceptMessage );
+            
+            var begin = $( '#begin' );
+            begin.prop( "disabled", true );
+            begin.text( kAcceptMessage );
+        }
+        else
+        {
+            var begin = $( '#begin' );
+            begin.click( function() {
+                // Hide the instructions. Show the experiment.
+                // Don't remove the introduction; it contains a form input for color experience.
+                $( '#introduction' ).hide();
+                $( '#experiment' ).show();
+                } );
+            // begin.prop( "disabled", false );
+            $("#experience").change( function() { begin.prop( "disabled", false ); } );
+        }
+        
+        // A callback to enable the submit button if all questions are answered.
+        // From: https://stackoverflow.com/questions/28168020/how-can-i-check-if-all-radio-buttons-are-checked
+        // From: https://stackoverflow.com/questions/6920606/jquery-how-to-check-if-all-radio-buttons-in-a-div-are-selected
+        $('.stimulus label').click(function(e){
+            if( $('div.stimulus:not(:has(:radio:checked))').length === 0 ) {
+                $('#submitButton').prop( 'disabled', false ).val("Submit");
+                
+            }
+            });
+        
+        if( kDebugging ) $("#experiment").show();
+        
+        return JSON.stringify( groups );
+    }
+    function imageify( div, kImagesDir, image_candidates, index, number_of_groups, question )
+    {
+        // div.append( '<div class="text-muted">Video ' + (index+1) + " of " + number_of_images + '</div>' );
+        div.append( '<nav class="navbar navbar-default" role="navigation" style="text-align: center"><p class="navbar-text" style="float: center">Question ' + (index+1) + " of " + number_of_groups + '</p></nav>' );
+        
+        // Fill the div with the original image followed by the question
+        // and then the choices.
+        // div.append( '<img src="' + kImagesDir + '/' + image_original">' );
+        div.append( '<h1>Which of the following has the most harmonic colors?</h1>' );
+        
+        // Make another div for the image candidates.
+        div.append( '<div class="image-candidates-wrap"><div class="image-candidates"></div></div>' );
+        var candidates = div.find( 'div.image-candidates' );
+        
+        for( var j in image_candidates )
+        {
+            // It is annoying that clicking the text inside
+            // an <input type="radio"> tag doesn't "click" on the button.
+            // We can make the text clickable with a <label>:
+            // http://www.electrictoolbox.com/html-label-toggle-select-fields/
+            var candidate_id = 'group' + index + 'cand' + j;
+            candidates.append(
+                '<label for="' + candidate_id + '"><div class="image-candidate">'
+                +
+                '<img class="img-thumbnail" src="' + kImagesDir + '/' + image_candidates[j] + '">'
+                +
+                '<div><input type="radio" value="' + image_candidates[j] + '" name="group' + index + '" id="' + candidate_id + '">This image</input></div>'
+                +
+                '</div></label>'
+                );
+        }
+        
+        // Add next/previous buttons.
+        if( kOneAtATime )
+        {
+            div.append(
+                '<div class="nextprev">'
+                +
+                (
+                    ( index > 0 && kMakePreviousButton )
+                    ? '<button type="button" class="prev btn btn-default btn-lg">Previous</button>'
+                    : ''
+                )
+                +
+                (
+                    ( index < number_of_groups-1 )
+                    ? '<button type="button" class="next btn btn-default btn-lg" disabled>Next</button>'
+                    : ''
+                )
+                +
+                '</div>'
+                );
+            // Logic to make the buttons work. We need a closure to capture the index.
+            div.find( ".next" ).click( function() { $('#group' + index).hide(); $('#group' + (index+1)).show() } );
+            div.find( ".prev" ).click( function() { $('#group' + index).hide(); $('#group' + (index-1)).show() } );
+            // Next shouldn't be enabled until question is answered.
+            // Add a callback to enable the next button once the question is answered.
+            div.find('label').click(function(e){ div.find(".next").prop( 'disabled', false ); });
+        }
+        
+        return div;
+    }
+    function die( message )
+    {
+        $('form').remove();
+        $('body').append( '<div class="label label-danger">' + message + '</div>' );
+    }
+    
+    ///
+    /// Initialization.
+    ///
+    $(document).ready( function() {
+    
+    $( '#begin' ).text("Begin");
+    
+    //
+    // From the Jquery plugin - http://projects.allmarkedup.com/jquery_url_parser/
+    //
+    assignmentId = purl().param("assignmentId");
+    // assignmentId = 'foobar';
+    $('#assignmentId').val( assignmentId );
+    
+    // Tested: The sandbox and the non-sandbox Mechanical Turk both
+    // provide a "turkSubmitTo" parameter when a HIT has been "accepted".
+    // They do not provide a "turkSubmitTo" in preview mode, though.
+    var submitTo = purl().param('turkSubmitTo');
+    if( submitTo !== undefined )
+    {
+        submitTo = unescape( submitTo );
+        $('#mturk_form').prop( 'action', submitTo + '/mturk/externalSubmit' );
+    }
+    
+    // Let's store the UserAgent for analyzing later (so we know what level of browser adoption we can expect).
+    $( "#UserAgent" ).val( navigator.userAgent );
+    
+    // Pass the payload back to the caller in case it's used as a job identifier.
+    var payload = purl().param("payload");
+    $( "#payload" ).val( payload );
+    
+    var stimulus = setup_form_for_payload( payload );
+    $( "#stimulus" ).val( stimulus );
+    
+    // If we can't load an image, it is a fatal error.
+    $( 'img' ).on( "error", function() {
+        die( 'There was an error loading this HIT. We apologize for the inconvenience.' );
+        } );
+    });
+</script>
+</div>
+</body>
+</html>
